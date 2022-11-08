@@ -1,7 +1,7 @@
 ## C-XPCS: A library for computational XPCS and XSVS
 Using computational analysis to compute the XSVS and XPCS experimental data by analyzing Molecular Dynamics trajectories. 
 
-![](XPCS_schematic.png)
+<img src="XPCS_schematic.png" alt="drawing" width="500" class="center"/>
 
 ## Cite
 If you use any particular segment of the code for your XPCS analysis, then please cite the following paper:
