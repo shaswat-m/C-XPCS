@@ -1,92 +1,78 @@
-# C-XPCS
+## C-XPCS: A library for computational XPCS and XSVS
+Using computational analysis to compute the XSVS and XPCS experimental data by analyzing Molecular Dynamics trajectories. 
 
-
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/micronano_public/c-xpcs.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/micronano_public/c-xpcs/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## Cite
+If you use any particular segment of the code for your XPCS analysis, then please cite the following paper:
+* Computational Approaches to Model X-ray Photon Correlation Spectroscopy from Molecular Dynamics (https://doi.org/10.1088/1361-651X/ac860c)
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Use the following lines to get all the dependencies setup
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```
+git clone git@gitlab.com:micronano_public/c-xpcs.git ; 
+cd c-xpcs ;
+workdir=$(pwd) ;
+python3 -m pip install -r py_requirements.txt ;
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Get the 5000 frame LAMMPS dumpfile in case you want to test the XPCS analysis.
+```
+cd $workdir/datafiles ;
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=13WDenyx3IYEwZhFj6qwDmEueY5oiHVDG' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=13WDenyx3IYEwZhFj6qwDmEueY5oiHVDG" -O dump.XPCS && rm -rf /tmp/cookies.txt ;
+```
+ 
+## Tests XPCS theory
+Use the following script to run the tests corresponding to the equivalence between the real-space (direct) method [Algorithm 1] and the FFT based method [Algorithm 2]. Change directory to the test directory. This should run the default set of 5 tests.
+```commandline
+cd $workdir/tests ;
+python3 test_intensity_theory.py ;
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## Key XPCS Functionalities
+Note: If you are using a local system or a login node of  cluster to check then use `--poolside 1` or `$n_cpu`. By default the multiprocessing pool will be initialized to use all CPUs. You can run the scripts without the `--poolsize` flag on a cluster to use the default.  
+
+Obtain the the `g(r)` and `s(q)` for a single snapshot and averaged over 50 frames using:
+```commandline
+cd $workdir/tests ;
+python3 test_MSMSE.py --rdf_and_sq --steps 1 --plot_results --poolsize 1 ;
+python3 test_MSMSE.py --rdf_and_sq --steps 50 --plot_results --poolsize 1 --save_data ;
+```
+Obtain the mean-squared displacement using:
+```commandline
+python3 test_MSMSE.py --msd --plot_results --timestep 21.56 --save_data ;
+```
+
+Consider using the following scripts on a cluster without the `--poolsize` flag to use all CPUs available on the compute node.
+
+The XPCS analysis can be carried out using:
+```commandline 
+python3 test_MSMSE.py --xpcs --steps 5000 --dump_filename '../datafiles/dump.XPCS' --plot_results --save_data --poolsize 1 ;
+```
+The XSVS analysis can be carried out using (computation of the optical contrast for different X-ray pulse widths):
+```commandline 
+python3 test_MSMSE.py --xsvs --steps 5000 --dump_filename '../datafiles/dump.XPCS' --plot_results --save_data --poolsize 1 ;
+```
+
+If you run the above scripts just as they are then you should have text files generated in the `$workdir/runs` directory which you can compare against the reference results in `$workdir/reference` to ensure the installation is done correctly. This can be done by running the following script:
+```commandline
+python3 test_MSMSE.py --check
+```
+## Publications 
+* Computational Approaches to Model X-ray Photon Correlation Spectroscopy from Molecular Dynamics (https://doi.org/10.48550/arXiv.2204.13241)
+* Computational Approaches to Model X-ray Photon Correlation Spectroscopy from Molecular Dynamics (https://doi.org/10.1088/1361-651X/ac860c)
+
+## Conference presentations
+* Computational X-ray Photon Correlation Spectroscopy from Molecular Dynamics Trajectories (MRS Spring 2022, Hawaii - Poster)
+
+## Support and Development
+
+For any support regarding the implementation of the source code, contact the developers at: 
+* Shaswat Mohanty (shaswatm@stanford.edu)
+* Wei Cai (caiwei@stanford.edu)
+
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
+The development is actively ongoing and the sole contributors are from Shaswat Mohanty and Wei Cai.  Request or suggestions for implementing additional functionalities to the library can be made to the developers directly.
 
 ## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Development is currently ongoing and is intended to be the dissertation project of Shaswat Mohanty.
