@@ -1,5 +1,5 @@
 llvmlite==0.39.1
-matplotlib==3.0.1
+matplotlib==3.6.2
 networkx==2.5.1
 numba==0.56.2
 numpy==1.23.2
