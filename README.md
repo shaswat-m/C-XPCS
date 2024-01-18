@@ -6,7 +6,18 @@ Using computational analysis to compute the XSVS and XPCS experimental data by a
 ## Cite
 If you use any particular segment of the code for your XPCS analysis, then please cite the following paper:
 * Computational Approaches to Model X-ray Photon Correlation Spectroscopy from Molecular Dynamics (https://doi.org/10.1088/1361-651X/ac860c)
-
+```
+@article{mohanty2022computational,
+  title={Computational approaches to model X-ray photon correlation spectroscopy from molecular dynamics},
+  author={Mohanty, Shaswat and Cooper, Christopher B and Wang, Hui and Liang, Mengning and Cai, Wei},
+  journal={Modelling and Simulation in Materials Science and Engineering},
+  volume={30},
+  number={7},
+  pages={075004},
+  year={2022},
+  publisher={IOP Publishing}
+}
+```
 ## Installation
 Use the following lines to get all the dependencies setup
 
